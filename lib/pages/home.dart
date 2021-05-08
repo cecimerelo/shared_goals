@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+final GoogleSignIn googleSignIn = GoogleSignIn();
 
 class Home extends StatefulWidget {
   @override
@@ -10,12 +13,43 @@ class _HomeState extends State<Home> {
   bool isAuth = false;
 
   @override
-  Widget build(BuildContext context) {
-    return isAuth ? buildAuthScreen() : buildUnAuthScreen();
+  void initState() {
+    super.initState();
+    googleSignIn.onCurrentUserChanged.listen((account) {
+      handleSignIn(account);
+    }, onError: (err) {
+      print("Error signing in: $err");
+    });
+
+    googleSignIn
+        .signInSilently(suppressErrors: false)
+        .then((account) => handleSignIn(account))
+        .catchError((err) {
+      print("Error signing in: $err");
+    });
   }
 
-  buildAuthScreen() {
-    return Text("Authenticated");
+  void handleSignIn(GoogleSignInAccount? account) {
+    if (account != null) {
+      print("User signed in!: $account");
+      setState(() {
+        isAuth = true;
+      });
+    } else {
+      isAuth = false;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return isAuth ? buildAuthScreen(context) : buildUnAuthScreen();
+  }
+
+  buildAuthScreen(context) {
+    return CupertinoButton(
+      child: Text("Log Out"),
+      onPressed: logout
+    );
   }
 
   Scaffold buildUnAuthScreen() {
@@ -25,7 +59,10 @@ class _HomeState extends State<Home> {
             gradient: LinearGradient(
                 begin: Alignment.topRight,
                 end: Alignment.bottomLeft,
-                colors: [Colors.teal, Colors.purple])),
+                colors: [
+              Theme.of(context).primaryColor,
+              Theme.of(context).accentColor
+            ])),
         alignment: Alignment.center,
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -39,7 +76,7 @@ class _HomeState extends State<Home> {
                     color: Colors.white),
               ),
               GestureDetector(
-                onTap: () => print('Tapped'),
+                onTap: login,
                 child: Container(
                     width: 260.0,
                     height: 60.0,
@@ -53,5 +90,14 @@ class _HomeState extends State<Home> {
             ]),
       ),
     );
+  }
+
+  login() {
+    googleSignIn.signIn();
+  }
+
+  logout() {
+    googleSignIn.signOut();
+    setState(() {});
   }
 }
