@@ -105,13 +105,9 @@ class _HomeState extends State<Home> {
                 begin: Alignment.topRight,
                 end: Alignment.bottomLeft,
                 colors: [
-                  Theme
-                      .of(context)
-                      .primaryColor,
-                  Theme
-                      .of(context)
-                      .accentColor
-                ])),
+              Theme.of(context).primaryColor,
+              Theme.of(context).accentColor
+            ])),
         alignment: Alignment.center,
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -157,6 +153,7 @@ class _HomeState extends State<Home> {
   }
 
   onTapTabBar(int pageIndex) {
-    pageController.jumpToPage(pageIndex);
+    pageController.animateToPage(pageIndex,
+        duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 }
