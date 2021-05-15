@@ -89,7 +89,7 @@ class _HomeState extends State<Home> {
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home_filled)),
           BottomNavigationBarItem(icon: Icon(Icons.notifications_active)),
-          BottomNavigationBarItem(icon: Icon(Icons.edit, size: 35.0)),
+          BottomNavigationBarItem(icon: Icon(Icons.add_box_outlined, size: 35.0)),
           BottomNavigationBarItem(icon: Icon(Icons.search)),
           BottomNavigationBarItem(icon: Icon(Icons.account_circle))
         ],
