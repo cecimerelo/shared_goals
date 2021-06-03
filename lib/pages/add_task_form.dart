@@ -92,7 +92,7 @@ class _AddTaskFormState extends State<AddTaskForm> {
               ),
             ),
             CupertinoButton.filled(
-              onPressed: () => {},
+              onPressed: () => saveTask(context),
               child: const Text('Save'),
             )
           ],
@@ -164,4 +164,8 @@ class _AddTaskFormState extends State<AddTaskForm> {
                 });
               },
               items: _dropdownMeasuringUnitsItems);
+
+  saveTask(BuildContext context) async {
+    Navigator.of(context).pop();
+  }
 }
