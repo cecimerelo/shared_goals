@@ -1,38 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-class MeasuringUnit {
-  String id;
-  String name;
-
-  MeasuringUnit(this.id, this.name);
-
-  static List<MeasuringUnit> getItems() {
-    return <MeasuringUnit>[
-      MeasuringUnit("books", "book(s)"),
-      MeasuringUnit("courses", "course(s)"),
-      MeasuringUnit("hours", "hour(s)"),
-    ];
-  }
-
-  static List<DropdownMenuItem<MeasuringUnit>>? buildDropdownMenuItems(
-      List<MeasuringUnit> measuringUnits) {
-    List<DropdownMenuItem<MeasuringUnit>> items = [];
-    for (MeasuringUnit unit in measuringUnits) {
-      items.add(
-        DropdownMenuItem(
-          value: unit,
-          child: Text(unit.name),
-        ),
-      );
-    }
-    return items;
-  }
-}
+import 'package:fluttershare/entities/measuring_unit_entity.dart';
 
 class AddTaskForm extends StatefulWidget {
-  AddTaskForm({Key? key}) : super(key: key);
+  AddTaskForm({Key? key, required this.onTaskAdded}) : super(key: key);
+
+  final Function(String) onTaskAdded;
 
   @override
   _AddTaskFormState createState() => _AddTaskFormState();
@@ -166,6 +140,7 @@ class _AddTaskFormState extends State<AddTaskForm> {
               items: _dropdownMeasuringUnitsItems);
 
   saveTask(BuildContext context) async {
+    widget.onTaskAdded(_taskTitle.text);
     Navigator.of(context).pop();
   }
 }
