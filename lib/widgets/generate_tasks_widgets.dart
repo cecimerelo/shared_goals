@@ -17,7 +17,7 @@ class _GenerateTasksWidgetsState extends State<GenerateTasksWidgets> {
   @override
   Widget build(BuildContext context) {
     Widget result = new Flexible(
-        flex: 2,
+        flex: 1,
         fit: FlexFit.loose,
         child: new Card(
           child: ListView.builder(
@@ -25,14 +25,16 @@ class _GenerateTasksWidgetsState extends State<GenerateTasksWidgets> {
             itemCount: widget.dynamicListOfTasks.length,
             itemBuilder: (_, index) {
               return new Padding(
-                padding: new EdgeInsets.all(10.0),
+                padding: new EdgeInsets.all(5.0),
                 child: new Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    new Container(
-                      margin: new EdgeInsets.only(left: 10.0),
-                      child: new Text(
-                          "${index + 1}. ${widget.dynamicListOfTasks[index]}"),
+                    new CheckboxListTile(
+                      value: false,
+                      onChanged: (bool? value) {},
+                      title: new Text("${widget.dynamicListOfTasks[index]}",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 19)),
                     ),
                     new Divider()
                   ],
