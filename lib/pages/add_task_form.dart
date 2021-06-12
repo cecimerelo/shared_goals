@@ -2,11 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttershare/entities/measuring_unit_entity.dart';
+import 'package:fluttershare/entities/task_entity.dart';
 
 class AddTaskForm extends StatefulWidget {
   AddTaskForm({Key? key, required this.onTaskAdded}) : super(key: key);
 
-  final Function(String) onTaskAdded;
+  final Function(Task) onTaskAdded;
 
   @override
   _AddTaskFormState createState() => _AddTaskFormState();
@@ -22,9 +23,11 @@ class _AddTaskFormState extends State<AddTaskForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _taskTitle = new TextEditingController();
   final TextEditingController _description = new TextEditingController();
+  DateTime deadline = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         appBar: AppBar(
           title: Text("New Task"),
@@ -61,13 +64,42 @@ class _AddTaskFormState extends State<AddTaskForm> {
                         totalEffortRow()
                       ]),
                     ),
+                    Divider(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SizedBox(
+                          child: Column(
+                            children: [
+                              Text(
+                                'Deadline',
+                                style: TextStyle(
+                                  fontSize: 17.0, fontWeight: FontWeight.bold),
+                              ),
+                              Container(
+                                height: 100,
+                                child: CupertinoDatePicker(
+                                    minimumYear: 2020,
+                                    maximumYear: 2050,
+                                    onDateTimeChanged: (DateTime value) {
+                                      deadline = value;
+                                    },
+                                    initialDateTime: DateTime.now(),
+                                    use24hFormat: true,
+                                    mode: CupertinoDatePickerMode.date),
+                              ),
+                            ],
+                          )),
+                    )
                   ],
                 ),
               ),
             ),
-            CupertinoButton.filled(
-              onPressed: () => saveTask(context),
-              child: const Text('Save'),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: CupertinoButton.filled(
+                onPressed: () => saveTask(context),
+                child: const Text('Save'),
+              ),
             )
           ],
         ),
@@ -140,7 +172,9 @@ class _AddTaskFormState extends State<AddTaskForm> {
               items: _dropdownMeasuringUnitsItems);
 
   saveTask(BuildContext context) async {
-    widget.onTaskAdded(_taskTitle.text);
+    Task newTask =
+        Task(deadline, false, false, selectedUnit.name, _taskTitle.text, '');
+    widget.onTaskAdded(newTask);
     Navigator.of(context).pop();
   }
 }

@@ -1,45 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttershare/entities/task_entity.dart';
 
-final CollectionReference stepsReference =
+final CollectionReference steps =
     FirebaseFirestore.instance.collection('steps');
 
 getStepsReference() {
-  return stepsReference;
+  return steps;
 }
 
 Future<QuerySnapshot<Object?>> getAllSteps() async {
-  final QuerySnapshot stepsSnapshot = await stepsReference.get();
+  final QuerySnapshot stepsSnapshot = await steps.get();
   return stepsSnapshot;
 }
 
-class Step {
-  bool _done;
-
-  bool get done => _done;
-
-  set done(bool done) {
-    _done = done;
-  }
-
-  DateTime _deadline;
-
-  DateTime get deadline => _deadline;
-
-  set deadline(DateTime deadline) {
-    _deadline = deadline;
-  }
-  bool _isRoot;
-
-  bool get isRoot => _isRoot;
-
-  set isRoot(bool isRoot) {
-    _isRoot = isRoot;
-  }
-  String name;
-  String parentId;
-  List resources;
-
-  Step(this._done, this._deadline, this._isRoot, this.name, this.parentId,
-      this.resources);
-
+Future<void> addStep(Task step) {
+  return steps.add({
+    'deadline': step.deadline,
+    'done': step.done,
+    'isRoot': step.isRoot,
+    'measuredIn' : step.measuredIn,
+    'name': step.name,
+    'parentId': step.parentId
+  })
+      .then((value) => print("Step Added"))
+      .catchError((error) => print("Failed to add step: $error"));
 }

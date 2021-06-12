@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttershare/entities/task_entity.dart';
 import 'package:fluttershare/pages/add_task_form.dart';
+import 'package:fluttershare/pages/edit_task_form.dart';
 
 class GenerateTasksWidgets extends StatefulWidget {
   GenerateTasksWidgets({Key? key}) : super(key: key);
 
-  late List<String> dynamicListOfTasks = [];
+  late List<Task> dynamicListOfTasks = [];
 
   @override
   _GenerateTasksWidgetsState createState() => _GenerateTasksWidgetsState();
@@ -30,9 +32,14 @@ class _GenerateTasksWidgetsState extends State<GenerateTasksWidgets> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     new CheckboxListTile(
+                      controlAffinity: ListTileControlAffinity.leading,
                       value: false,
+                      secondary: InkWell(
+                          child: new Icon(Icons.edit),
+                          onTap: () =>
+                              {Navigator.of(context).push(_editTaskForm())}),
                       onChanged: (bool? value) {},
-                      title: new Text("${widget.dynamicListOfTasks[index]}",
+                      title: new Text("${widget.dynamicListOfTasks[index].name}",
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 19)),
                     ),
@@ -61,7 +68,11 @@ class _GenerateTasksWidgetsState extends State<GenerateTasksWidgets> {
   Route<Object?> _addTaskForm() {
     return CupertinoPageRoute(
         builder: (_) => AddTaskForm(
-            onTaskAdded: (String newTaskTitle) =>
-                setState(() => widget.dynamicListOfTasks.add(newTaskTitle))));
+            onTaskAdded: (Task newTask) =>
+                setState(() => widget.dynamicListOfTasks.add(newTask))));
+  }
+
+  Route<Object?> _editTaskForm() {
+    return CupertinoPageRoute(builder: (_) => EditTaskForm());
   }
 }
