@@ -50,11 +50,6 @@ class _AddTaskFormState extends State<AddTaskForm> {
                           return null;
                         },
                       ),
-                      CupertinoTextFormFieldRow(
-                        maxLines: 4,
-                        placeholder: 'Enter a description here',
-                        controller: _description,
-                      )
                     ]),
                     Padding(
                       padding: const EdgeInsets.only(

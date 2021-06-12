@@ -35,9 +35,9 @@ class _GenerateTasksWidgetsState extends State<GenerateTasksWidgets> {
                       controlAffinity: ListTileControlAffinity.leading,
                       value: false,
                       secondary: InkWell(
-                          child: new Icon(Icons.edit),
+                          child: new Icon(Icons.remove),
                           onTap: () =>
-                              {Navigator.of(context).push(_editTaskForm())}),
+                              _deleteTask(widget.dynamicListOfTasks[index])),
                       onChanged: (bool? value) {},
                       title: new Text("${widget.dynamicListOfTasks[index].name}",
                           style: TextStyle(
@@ -72,7 +72,10 @@ class _GenerateTasksWidgetsState extends State<GenerateTasksWidgets> {
                 setState(() => widget.dynamicListOfTasks.add(newTask))));
   }
 
-  Route<Object?> _editTaskForm() {
-    return CupertinoPageRoute(builder: (_) => EditTaskForm());
+  void _deleteTask(Task taskToDelete) {
+    setState(() {
+      widget.dynamicListOfTasks
+          .removeWhere((task) => task.name == taskToDelete.name);
+    });
   }
 }

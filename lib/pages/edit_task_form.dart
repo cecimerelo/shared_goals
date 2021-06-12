@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:fluttershare/entities/task_entity.dart';
 
 class EditTaskForm extends StatefulWidget {
-  EditTaskForm({Key? key}) : super(key: key);
+  EditTaskForm(Task taskToEdit, {Key? key}) : super(key: key);
 
   @override
   _EditTaskFormState createState() => _EditTaskFormState();
