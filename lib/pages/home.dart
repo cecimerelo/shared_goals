@@ -1,13 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttershare/data_access/users_data_access.dart';
 import 'package:fluttershare/pages/activity_feed.dart';
+import 'package:fluttershare/pages/create_account.dart';
 import 'package:fluttershare/pages/profile.dart';
 import 'package:fluttershare/pages/search.dart';
-import 'package:fluttershare/pages/timeline.dart';
 import 'package:fluttershare/pages/upload.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 final GoogleSignIn googleSignIn = GoogleSignIn();
+final DateTime timestamp = DateTime.now();
 
 class Home extends StatefulWidget {
   @override
@@ -47,6 +50,7 @@ class _HomeState extends State<Home> {
 
   void handleSignIn(GoogleSignInAccount? account) {
     if (account != null) {
+      _createUserInFirestore();
       print("User signed in!: $account");
       setState(() {
         isAuth = true;
@@ -56,22 +60,39 @@ class _HomeState extends State<Home> {
     }
   }
 
+  void _createUserInFirestore() async {
+    GoogleSignInAccount? user = googleSignIn.currentUser;
+    final usersReference = getUsersReference();
+    final DocumentSnapshot doc = await usersReference.doc(user!.id).get();
+
+    if (!doc.exists) {
+      final username = await Navigator.push(
+          context, MaterialPageRoute(builder: (context) => CreateAccount()));
+
+      usersReference.doc(user.id).set({
+        'id': user.id,
+        'username': username,
+        'photoUrl': user.photoUrl,
+        'email': user.email,
+        'displayName': user.displayName,
+        'bio': '',
+        'timestamp': timestamp
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return isAuth ? buildAuthScreen(context) : buildUnAuthScreen();
   }
 
   Scaffold buildAuthScreen(context) {
-    // return CupertinoButton(
-    //   child: Text("Log Out"),
-    //   onPressed: logout
-    // );
-
     return Scaffold(
       body: PageView(
         // contains all the pages that we want
         children: <Widget>[
           Timeline(),
+          //CupertinoButton(child: Text('log out'), onPressed: logout),
           ActivityFeed(),
           Upload(),
           Search(),

@@ -3,6 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 final CollectionReference usersReference =
     FirebaseFirestore.instance.collection('users');
 
+CollectionReference getUsersReference() {
+  return usersReference;
+}
+
 Future<QuerySnapshot<Object?>> getAllUsers() async {
   final QuerySnapshot usersSnapshot = await usersReference.get();
   return usersSnapshot;
