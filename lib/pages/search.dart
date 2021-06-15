@@ -1,8 +1,12 @@
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttershare/data_access/users_data_access.dart';
+import 'package:fluttershare/models/user.dart';
+import 'package:fluttershare/widgets/progress.dart';
 
 class Search extends StatefulWidget {
   @override
@@ -10,21 +14,31 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
+  late var searchResultsFuture;
+
+  @override
+  void initState() {
+    searchResultsFuture = null;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildSearchField(),
-      body: buildNoContent()
-    );
+        appBar: buildSearchField(),
+        body: searchResultsFuture == null
+            ? buildNoContent()
+            : buildSearchResults());
   }
 
   AppBar buildSearchField() {
     return AppBar(
-      backgroundColor: Colors.white,
-      title: CupertinoSearchTextField(
-        placeholder: 'Search for a user ...',
-      )
-    );
+        backgroundColor: Colors.white,
+        title: CupertinoSearchTextField(
+          onSubmitted: (String query) {
+            handleSearch(query);
+          },
+          placeholder: 'Search for a user ...',
+        ));
   }
 
   buildNoContent() {
@@ -49,6 +63,34 @@ class _SearchState extends State<Search> {
         ),
       ),
     );
+  }
+
+  handleSearch(String query) {
+    Future<QuerySnapshot> users = usersReference
+        .where('displayName', isGreaterThanOrEqualTo: query)
+        .get();
+
+    setState(() {
+      searchResultsFuture = users;
+    });
+  }
+
+  buildSearchResults() {
+    return FutureBuilder(
+        future: searchResultsFuture,
+        builder: (context, AsyncSnapshot snapshot) {
+          if (!snapshot.hasData) {
+            return circularProgress(context);
+          }
+          List<Text> searchResults = [];
+          snapshot.data!.docs.forEach((doc) {
+            User user = User.fromDocument(doc);
+            searchResults.add(Text(user.username));
+          });
+          return ListView(
+            children: searchResults,
+          );
+        });
   }
 }
 
