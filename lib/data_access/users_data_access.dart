@@ -12,6 +12,11 @@ Future<QuerySnapshot<Object?>> getAllUsers() async {
   return usersSnapshot;
 }
 
+Future<QuerySnapshot<Object?>> getUsersWhereFieldIsEqualTo(
+    fieldName, query) {
+  return usersReference.where(fieldName, isEqualTo: query).get();
+}
+
 void getUsersWhereFieldIsEqualToValue(fieldName, value) async {
   final QuerySnapshot usersSnapshot =
       await usersReference.where(fieldName, isEqualTo: value).get();

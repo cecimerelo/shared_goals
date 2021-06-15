@@ -21,6 +21,7 @@ class _SearchState extends State<Search> {
     searchResultsFuture = null;
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,19 +67,18 @@ class _SearchState extends State<Search> {
   }
 
   handleSearch(String query) {
-    Future<QuerySnapshot> users = usersReference
-        .where('displayName', isGreaterThanOrEqualTo: query)
-        .get();
+    Future<QuerySnapshot> usersSearched =
+        getUsersWhereFieldIsEqualTo('username', query);
 
     setState(() {
-      searchResultsFuture = users;
+      searchResultsFuture = usersSearched;
     });
   }
 
   buildSearchResults() {
     return FutureBuilder(
         future: searchResultsFuture,
-        builder: (context, AsyncSnapshot snapshot) {
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return circularProgress(context);
           }
