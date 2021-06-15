@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttershare/data_access/users_data_access.dart';
+import 'package:fluttershare/models/user.dart';
 import 'package:fluttershare/pages/activity_feed.dart';
 import 'package:fluttershare/pages/create_account.dart';
 import 'package:fluttershare/pages/profile.dart';
@@ -11,6 +12,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 final GoogleSignIn googleSignIn = GoogleSignIn();
 final DateTime timestamp = DateTime.now();
+late User currentUser;
 
 class Home extends StatefulWidget {
   @override
@@ -63,7 +65,7 @@ class _HomeState extends State<Home> {
   void _createUserInFirestore() async {
     GoogleSignInAccount? user = googleSignIn.currentUser;
     final usersReference = getUsersReference();
-    final DocumentSnapshot doc = await usersReference.doc(user!.id).get();
+    DocumentSnapshot doc = await usersReference.doc(user!.id).get();
 
     if (!doc.exists) {
       final username = await Navigator.push(
@@ -78,7 +80,11 @@ class _HomeState extends State<Home> {
         'bio': '',
         'timestamp': timestamp
       });
+
+      doc = await usersReference.doc(user.id).get();
     }
+
+    currentUser = User.fromDocument(doc);
   }
 
   @override
@@ -91,8 +97,8 @@ class _HomeState extends State<Home> {
       body: PageView(
         // contains all the pages that we want
         children: <Widget>[
-          Timeline(),
-          //CupertinoButton(child: Text('log out'), onPressed: logout),
+          //Timeline(),
+          CupertinoButton(child: Text('log out'), onPressed: logout),
           ActivityFeed(),
           Upload(),
           Search(),

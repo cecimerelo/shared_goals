@@ -1,4 +1,8 @@
+import 'dart:ui';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Search extends StatefulWidget {
   @override
@@ -8,7 +12,39 @@ class Search extends StatefulWidget {
 class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
-    return Text('Search');
+    return Scaffold(
+      appBar: buildSearchField(),
+      body: buildNoContent()
+    );
+  }
+
+  AppBar buildSearchField() {
+    return AppBar(
+      backgroundColor: Colors.white,
+      title: CupertinoSearchTextField(
+        placeholder: 'Search for a user ...',
+      )
+    );
+  }
+
+  buildNoContent() {
+    return Container(
+      child: Center(
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            SvgPicture.asset('assets/images/search.svg', height: 300),
+            Text('Find Users',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 60.0))
+          ],
+        ),
+      ),
+    );
   }
 }
 
