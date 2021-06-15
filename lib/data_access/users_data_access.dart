@@ -14,7 +14,7 @@ Future<QuerySnapshot<Object?>> getAllUsers() async {
 
 Future<QuerySnapshot<Object?>> getUsersWhereFieldIsEqualTo(
     fieldName, query) {
-  return usersReference.where(fieldName, isEqualTo: query).get();
+  return usersReference.orderBy(fieldName).startAt([query]).endAt([query + '\uf8ff']).get();
 }
 
 void getUsersWhereFieldIsEqualToValue(fieldName, value) async {
