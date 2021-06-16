@@ -87,20 +87,19 @@ class _AddTaskFormState extends State<AddTaskForm> {
                         )
                     ),
                   ),
-                  CupertinoFormSection(
-                      header: Text('Resources'),
-                      children: [
-                        Center(
-                          child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: int.parse(_totalEffort.text),
-                              itemBuilder: (_, index) {
-                                return new CupertinoTextFormFieldRow(
-                                    autocorrect: true, prefix: Icon(resourceIcon));
-                              }),
-                        )
-                      ]
-                  ),
+                  CupertinoFormSection(header: Text('Resources'), children: [
+                    Center(
+                      child: int.parse(_totalEffort.text) == 0
+                          ? Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'No effort added yet...',
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            )
+                          : _resourceFormRow(int.parse(_totalEffort.text)),
+                    )
+                  ]),
                 ],
               ),
             ),
@@ -116,6 +115,14 @@ class _AddTaskFormState extends State<AddTaskForm> {
         ),
     );
   }
+
+  ListView _resourceFormRow(int itemCount) => ListView.builder(
+      shrinkWrap: true,
+      itemCount: itemCount,
+      itemBuilder: (_, index) {
+        return new CupertinoTextFormFieldRow(
+            autocorrect: true, prefix: Icon(resourceIcon));
+      });
 
   Row measuredInRow() => Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
