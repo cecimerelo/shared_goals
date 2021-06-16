@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttershare/entities/measuring_unit_entity.dart';
 import 'package:fluttershare/entities/task_entity.dart';
-import 'package:fluttershare/widgets/generate_resources_widgets.dart';
 
 class AddTaskForm extends StatefulWidget {
   AddTaskForm({Key? key, required this.onTaskAdded}) : super(key: key);
@@ -46,7 +45,7 @@ class _AddTaskFormState extends State<AddTaskForm> {
                   CupertinoFormSection(children: [
                     CupertinoTextFormFieldRow(
                       placeholder: 'Task title ',
-                      controller: _resource,
+                      controller: _taskTitle,
                       validator: (String? value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter a task title';
@@ -197,6 +196,7 @@ class _AddTaskFormState extends State<AddTaskForm> {
               items: _dropdownMeasuringUnitsItems);
 
   saveTask(BuildContext context) async {
+    // TODO: complete tasks
     Task newTask =
         Task(deadline, false, false, selectedUnit.name, _taskTitle.text, '');
     widget.onTaskAdded(newTask);
