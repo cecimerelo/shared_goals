@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -82,10 +83,11 @@ class _SearchState extends State<Search> {
           if (!snapshot.hasData) {
             return circularProgress(context);
           }
-          List<Text> searchResults = [];
+          List<UserResult> searchResults = [];
           snapshot.data!.docs.forEach((doc) {
             User user = User.fromDocument(doc);
-            searchResults.add(Text(user.username));
+            UserResult searchResult = UserResult(user);
+            searchResults.add(searchResult);
           });
           return ListView(
             children: searchResults,
@@ -95,8 +97,35 @@ class _SearchState extends State<Search> {
 }
 
 class UserResult extends StatelessWidget {
+  final User user;
+
+  UserResult(this.user);
+
   @override
   Widget build(BuildContext context) {
-    return Text("User Result");
+    return Container(
+      color: Colors.white,
+      child: Column(children: [
+        GestureDetector(
+          onTap: () => print('tapped'),
+          child: ListTile(
+              leading: CircleAvatar(
+                backgroundColor: Colors.blueGrey,
+                backgroundImage: CachedNetworkImageProvider(user.photoUrl),
+              ),
+              title: Text(user.displayName,
+                  style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.bold)),
+              subtitle: Text(
+                user.username,
+                style: TextStyle(color: Colors.grey),
+              )),
+        ),
+        Divider(
+          height: 2.0,
+          color: Colors.white54,
+        )
+      ]),
+    );
   }
 }
