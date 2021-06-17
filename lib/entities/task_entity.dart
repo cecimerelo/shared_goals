@@ -5,7 +5,8 @@ class Task {
   String name;
   String totalEffort;
   String parentID;
+  List<String> resourcesReference;
 
   Task(this.deadline, this.done, this.measuredIn, this.name, this.totalEffort,
-      this.parentID);
+      this.parentID, this.resourcesReference);
 }

@@ -20,6 +20,7 @@ Future<DocumentReference<Object?>> addStep(Task task) {
     'measuredIn': task.measuredIn,
     'name': task.name,
     'totalEffort': task.totalEffort,
-    'parentID': task.parentID
+    'parentID': task.parentID,
+    'resourcesReference': task.resourcesReference
   });
 }

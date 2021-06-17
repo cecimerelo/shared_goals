@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttershare/data_access/resources_data_access.dart';
 import 'package:fluttershare/entities/measuring_unit_entity.dart';
+import 'package:fluttershare/entities/resource.dart';
 import 'package:fluttershare/entities/task_entity.dart';
 
 class AddTaskForm extends StatefulWidget {
@@ -26,10 +28,10 @@ class _AddTaskFormState extends State<AddTaskForm> {
 
   IconData resourceIcon = Icons.auto_stories;
   DateTime deadline = DateTime.now();
+  final List<TextEditingController> _resource = [];
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController _resource = new TextEditingController();
 
     return Scaffold(
         appBar: AppBar(
@@ -120,8 +122,13 @@ class _AddTaskFormState extends State<AddTaskForm> {
       shrinkWrap: true,
       itemCount: itemCount,
       itemBuilder: (_, index) {
+        TextEditingController resourceController = TextEditingController();
+        _resource.add(resourceController);
+
         return new CupertinoTextFormFieldRow(
-            autocorrect: true, prefix: Icon(resourceIcon));
+            autocorrect: true,
+            prefix: Icon(resourceIcon),
+            controller: resourceController);
       });
 
   Row measuredInRow() => Row(
@@ -203,9 +210,16 @@ class _AddTaskFormState extends State<AddTaskForm> {
               items: _dropdownMeasuringUnitsItems);
 
   saveTask(BuildContext context) async {
-    // TODO :: save resources
-    Task newTask = Task(
-        deadline, false, selectedUnit.id, _taskTitle.text, _totalEffort.text, '');
+    List<String> resourcesReference = [];
+
+    for (TextEditingController controller in _resource) {
+      Resource resource = Resource(selectedUnit.id, controller.text);
+      await addResource(resource)
+          .then((value) => resourcesReference.add(value.path));
+    }
+
+    Task newTask = Task(deadline, false, selectedUnit.id, _taskTitle.text,
+        _totalEffort.text, '', resourcesReference);
     widget.onTaskAdded(newTask);
     Navigator.of(context).pop();
   }

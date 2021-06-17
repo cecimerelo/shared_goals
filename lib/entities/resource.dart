@@ -1,6 +1,6 @@
 class Resource {
-  String measuringUnit;
+  String measuringUnitName;
   String resource;
 
-  Resource(this.measuringUnit, this.resource);
+  Resource(this.measuringUnitName, this.resource);
 }
