@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttershare/data_access/steps_data_access.dart';
+import 'package:fluttershare/data_access/tasks_data_access.dart';
 import 'package:fluttershare/widgets/header.dart';
 import 'package:fluttershare/widgets/progress.dart';
 
@@ -28,7 +28,7 @@ class _TimelineState extends State<Timeline> {
 
   @override
   Widget build(context) {
-    CollectionReference stepsReference = getStepsReference();
+    CollectionReference stepsReference = getTasksReference();
     return Scaffold(
         appBar: header(context, isAppTitle: true),
         body: StreamBuilder<QuerySnapshot>(

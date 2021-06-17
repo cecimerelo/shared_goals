@@ -12,9 +12,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 final GoogleSignIn googleSignIn = GoogleSignIn();
 final DateTime timestamp = DateTime.now();
-late User currentUser;
 
 class Home extends StatefulWidget {
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -23,6 +23,7 @@ class _HomeState extends State<Home> {
   bool isAuth = false;
   late PageController pageController;
   int pageIndex = 0;
+  late User currentUser=User('', '', '', '', '', '', '');
 
   @override
   void initState() {
@@ -84,7 +85,9 @@ class _HomeState extends State<Home> {
       doc = await usersReference.doc(user.id).get();
     }
 
-    currentUser = User.fromDocument(doc);
+    setState(() {
+      currentUser = User.fromDocument(doc);
+    });
   }
 
   @override
@@ -100,7 +103,7 @@ class _HomeState extends State<Home> {
           //Timeline(),
           CupertinoButton(child: Text('log out'), onPressed: logout),
           ActivityFeed(),
-          Upload(),
+          Upload(currentUser: currentUser),
           Search(),
           Profile()
         ],

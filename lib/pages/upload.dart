@@ -1,20 +1,34 @@
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttershare/data_access/goals_data_access.dart';
+import 'package:fluttershare/data_access/tasks_data_access.dart';
+import 'package:fluttershare/entities/goal_entity.dart';
+import 'package:fluttershare/entities/task_entity.dart' as task_entity;
+import 'package:fluttershare/models/user.dart';
 import 'package:fluttershare/widgets/generate_tasks_widgets.dart';
 import 'package:fluttershare/widgets/header.dart';
+import 'package:uuid/uuid.dart';
 
 class Upload extends StatefulWidget {
+  final User currentUser;
+
+  Upload({required this.currentUser});
+
   @override
   _UploadState createState() => _UploadState();
 }
 
 class _UploadState extends State<Upload> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController goalTitle = new TextEditingController();
+  final TextEditingController _goalTitle = new TextEditingController(text: '');
+  bool isUploading = false;
+  late DateTime goalDeadline = DateTime.now();
+  List<firebase_storage.Task> tasksToSave = [];
+  GenerateTasksWidgets generateTasksWidgets = new GenerateTasksWidgets();
 
   @override
   Widget build(BuildContext context) {
-    DateTime goalDeadline;
 
     return Scaffold(
         appBar: header(context, titleText: "Upload Goal"),
@@ -27,13 +41,7 @@ class _UploadState extends State<Upload> {
                     children: <Widget>[
                       CupertinoTextFormFieldRow(
                         placeholder: 'What do you want to achieve ? ',
-                        controller: goalTitle,
-                        validator: (String? value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter a Goal Name';
-                          }
-                          return null;
-                        },
+                        controller: _goalTitle,
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -66,11 +74,56 @@ class _UploadState extends State<Upload> {
                   CupertinoFormSection(
                     header: Text('Tasks'),
                     children: [
-                      GenerateTasksWidgets()
+                      generateTasksWidgets
                     ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CupertinoButton.filled(
+                      onPressed: () => handleSubmit(),
+                      child: const Text('Save'),
+                    ),
                   )
                 ],
               ),
             )));
   }
+
+  handleSubmit() {
+    if (!isUploading) {
+      setState(() {
+        isUploading = true;
+      });
+      var uuid = Uuid().v4();
+
+      createGoalInFirestore(
+          parentId: uuid,
+          deadline: goalDeadline,
+          name: _goalTitle.text);
+    }
+  }
+
+  createGoalInFirestore(
+      {required String parentId,
+      required DateTime deadline,
+      required String name}) async {
+
+    List<String> tasksReference = await saveTasksInFireStore(parentId);
+
+    Goal goal = Goal(parentId, deadline, name, tasksReference,
+        widget.currentUser.id, widget.currentUser.username);
+    createGoal(goal);
+  }
+
+  Future<List<String>> saveTasksInFireStore(String parentId) async {
+    List<String> tasksReference= [];
+    for(var i=0;i<generateTasksWidgets.dynamicListOfTasks.length;i++){
+      task_entity.Task task = generateTasksWidgets.dynamicListOfTasks[i];
+      task.parentID = parentId;
+      await addStep(task).then((value) =>
+          tasksReference.add(value.path));
+    }
+    return tasksReference;
+    }
+
 }

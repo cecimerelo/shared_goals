@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttershare/entities/task_entity.dart';
 import 'package:fluttershare/pages/add_task_form.dart';
-import 'package:fluttershare/pages/edit_task_form.dart';
 
 class GenerateTasksWidgets extends StatefulWidget {
   GenerateTasksWidgets({Key? key}) : super(key: key);

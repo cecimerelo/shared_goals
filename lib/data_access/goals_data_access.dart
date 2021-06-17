@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttershare/entities/goal_entity.dart';
 
 final CollectionReference goalsReference =
     FirebaseFirestore.instance.collection('goals');
 
-createGoal(name, dateTime, steps) {
-  goalsReference.add({
-    'name': name,
-    'deadline': Timestamp.fromDate(new DateTime(dateTime)),
+createGoal(Goal goal) {
+  goalsReference.doc(goal.id).set({
+    'name': goal.name,
+    'deadline': Timestamp.fromDate(goal.deadline),
     'createdOn': Timestamp.now(),
-    'steps': steps
+    'tasksReference': goal.tasksReference
   });
 }

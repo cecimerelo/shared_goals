@@ -203,9 +203,9 @@ class _AddTaskFormState extends State<AddTaskForm> {
               items: _dropdownMeasuringUnitsItems);
 
   saveTask(BuildContext context) async {
-    // TODO: complete tasks
-    Task newTask =
-        Task(deadline, false, false, selectedUnit.name, _taskTitle.text, '');
+    // TODO :: save resources
+    Task newTask = Task(
+        deadline, false, selectedUnit.id, _taskTitle.text, _totalEffort.text, '');
     widget.onTaskAdded(newTask);
     Navigator.of(context).pop();
   }
