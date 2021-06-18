@@ -17,6 +17,10 @@ Future<QuerySnapshot<Object?>> getUsersWhereFieldIsEqualTo(
   return usersReference.orderBy(fieldName).startAt([query]).endAt([query + '\uf8ff']).get();
 }
 
+Future<DocumentSnapshot<Object?>> getCurrentUser(String profileId) {
+  return usersReference.doc(profileId).get();
+}
+
 void getUsersWhereFieldIsEqualToValue(fieldName, value) async {
   final QuerySnapshot usersSnapshot =
       await usersReference.where(fieldName, isEqualTo: value).get();
