@@ -1,8 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:fluttershare/data_access/users_data_access.dart';
+import 'package:fluttershare/globals.dart';
 import 'package:fluttershare/models/user.dart';
+import 'package:fluttershare/pages/edit_profile.dart';
 import 'package:fluttershare/widgets/header.dart';
 import 'package:fluttershare/widgets/progress.dart';
 
@@ -16,6 +19,8 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  final String currentUserId = currentUser.id;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,6 +121,35 @@ class _ProfileState extends State<Profile> {
   }
 
   buildEditProfileButton() {
-    return Text('Edit Profile');
+    // if we are seeing our own profile
+    bool isProfileOwner = currentUserId == widget.profileId ? true : false;
+    if (isProfileOwner) {
+      return buildButton(text: 'Edit Profile', function: editProfile);
+    }
   }
+
+  Container buildButton({required String text, required VoidCallback function}) {
+    return Container(
+        padding: EdgeInsets.only(top: 2.0),
+        child: TextButton(
+          onPressed: function,
+          child: Container(
+            width: 250.0,
+            height: 27.0,
+            child: Text(text,
+                style: TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold)),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                color: Colors.blue,
+                border: Border.all(color: Colors.blue),
+                borderRadius: BorderRadius.circular(5.0)),
+          ),
+        ));
+  }
+
+  void editProfile() => SchedulerBinding.instance!.addPostFrameCallback((_) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => EditProfile(currentUserId: currentUserId)));
+    });
 }

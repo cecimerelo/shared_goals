@@ -7,8 +7,10 @@ import 'package:fluttershare/pages/activity_feed.dart';
 import 'package:fluttershare/pages/create_account.dart';
 import 'package:fluttershare/pages/profile.dart';
 import 'package:fluttershare/pages/search.dart';
+import 'package:fluttershare/pages/timeline.dart';
 import 'package:fluttershare/pages/upload.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:fluttershare/globals.dart' as globals;
 
 final GoogleSignIn googleSignIn = GoogleSignIn();
 final DateTime timestamp = DateTime.now();
@@ -88,6 +90,8 @@ class _HomeState extends State<Home> {
     setState(() {
       currentUser = User.fromDocument(doc);
     });
+
+    globals.currentUser = currentUser;
   }
 
   @override
@@ -100,8 +104,7 @@ class _HomeState extends State<Home> {
       body: PageView(
         // contains all the pages that we want
         children: <Widget>[
-          //Timeline(),
-          CupertinoButton(child: Text('log out'), onPressed: logout),
+          Timeline(),
           ActivityFeed(),
           Upload(currentUser: currentUser),
           Search(),
@@ -169,11 +172,6 @@ class _HomeState extends State<Home> {
 
   login() {
     googleSignIn.signIn();
-  }
-
-  logout() {
-    googleSignIn.signOut();
-    setState(() {});
   }
 
   void onPageChanged(int pageIndex) {
