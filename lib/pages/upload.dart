@@ -1,14 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttershare/data_access/goals_data_access.dart';
 import 'package:fluttershare/data_access/tasks_data_access.dart';
-import 'package:fluttershare/entities/goal_entity.dart';
 import 'package:fluttershare/entities/task_entity.dart' as task_entity;
+import 'package:fluttershare/models/goal.dart';
 import 'package:fluttershare/models/user.dart';
 import 'package:fluttershare/widgets/generate_tasks_widgets.dart';
 import 'package:fluttershare/widgets/header.dart';
 import 'package:uuid/uuid.dart';
+
+import 'home.dart';
 
 class Upload extends StatefulWidget {
   final User currentUser;
@@ -94,24 +97,23 @@ class _UploadState extends State<Upload> {
       setState(() {
         isUploading = true;
       });
-      var uuid = Uuid().v4();
-
       createGoalInFirestore(
-          parentId: uuid,
           deadline: goalDeadline,
           name: _goalTitle.text);
     }
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
   }
 
   createGoalInFirestore(
-      {required String parentId,
+      {
       required DateTime deadline,
       required String name}) async {
 
-    List<String> tasksReference = await saveTasksInFireStore(parentId);
+    String parentId = Uuid().v4();
 
-    Goal goal = Goal(parentId, deadline, name, tasksReference,
-        widget.currentUser.id, widget.currentUser.username);
+    List<String> tasksReference = await saveTasksInFireStore(parentId);
+    GoalEntity goal = GoalEntity(parentId, deadline, name, tasksReference,
+        widget.currentUser.id, widget.currentUser.username, Timestamp.now());
     createGoal(goal);
   }
 
