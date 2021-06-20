@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttershare/data_access/tasks_data_access.dart';
+import 'package:fluttershare/models/task.dart';
+import 'package:fluttershare/widgets/generic_step_widget.dart';
 import 'package:fluttershare/widgets/header.dart';
 import 'package:fluttershare/widgets/progress.dart';
 
@@ -10,7 +12,7 @@ class Timeline extends StatefulWidget {
 }
 
 class _TimelineState extends State<Timeline> {
-  List<dynamic> steps = [];
+  List<GenericStepWidget> steps = [];
 
   @override
   void initState() {
@@ -18,29 +20,21 @@ class _TimelineState extends State<Timeline> {
     super.initState();
   }
 
-  Future setStep() async {
+  setStep() async {
     final QuerySnapshot stepsSnapshot = await getAllUndoneSteps();
 
     setState(() {
-      steps = stepsSnapshot.docs;
+      steps = stepsSnapshot.docs
+          .map((goal) => GenericStepWidget.fromDocument(goal))
+          .toList();
     });
   }
 
   @override
   Widget build(context) {
-    CollectionReference stepsReference = getTasksReference();
     return Scaffold(
         appBar: header(context, isAppTitle: true),
-        body: StreamBuilder<QuerySnapshot>(
-            stream: stepsReference.snapshots(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return circularProgress(context);
-              }
-              final List<Text> children = snapshot.data!.docs.map((step) => Text(step['name'])).toList();
-              return Container(
-                  // TODO: build steps widget
-                  child: ListView(children: children));
-            }));
+        body: Column(children: steps)
+    );
   }
 }

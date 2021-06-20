@@ -25,7 +25,6 @@ class _VisualizeTaskState extends State<VisualizeTask> {
 
   getResourceTasks() async {
     QuerySnapshot resourceSnapshots = await getTaskResources(widget.task.name);
-
     setState(() {
       resources = resourceSnapshots.docs
           .map((goal) => ResourceWidget.fromDocument(goal))
@@ -88,10 +87,26 @@ class _VisualizeTaskState extends State<VisualizeTask> {
               'Resources',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
-            Column(children: resources)
+            buildResource()
           ],
         ),
       ),
     );
+  }
+
+  buildResource() {
+    if(resources.isEmpty){
+      return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: Text(
+              'No resources added...',
+              style: TextStyle(
+                  color: Colors.grey, fontStyle: FontStyle.italic),
+              textAlign: TextAlign.center,
+            ),
+          ));
+    }
+    return Column(children: resources);
   }
 }
