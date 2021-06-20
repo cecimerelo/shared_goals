@@ -77,8 +77,7 @@ class _ProfileState extends State<Profile> {
         ));
   }
 
-  buildProfileHeader() {
-    return FutureBuilder(
+  buildProfileHeader() => FutureBuilder(
         future: getCurrentUser(widget.profileId),
         builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (!snapshot.hasData) {
@@ -130,7 +129,6 @@ class _ProfileState extends State<Profile> {
             ),
           );
         });
-  }
 
   Row buildProfileValuesRow() => Row(
           mainAxisSize: MainAxisSize.max,
@@ -195,29 +193,30 @@ class _ProfileState extends State<Profile> {
     bool isProfileOwner = currentUserId == widget.profileId ? true : false;
     if (isProfileOwner) {
       return buildButton(text: 'Edit Profile', function: editProfile);
+    } else{
+      return Text('Other');
     }
   }
 
   Container buildButton(
-      {required String text, required VoidCallback function}) {
-    return Container(
-        padding: EdgeInsets.only(top: 2.0),
-        child: TextButton(
-          onPressed: function,
-          child: Container(
-            width: 250.0,
-            height: 27.0,
-            child: Text(text,
-                style: TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.bold)),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                color: Colors.blue,
-                border: Border.all(color: Colors.blue),
-                borderRadius: BorderRadius.circular(5.0)),
-          ),
-        ));
-  }
+          {required String text, required VoidCallback function}) =>
+      Container(
+          padding: EdgeInsets.only(top: 2.0),
+          child: TextButton(
+            onPressed: function,
+            child: Container(
+              width: 250.0,
+              height: 27.0,
+              child: Text(text,
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold)),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  color: Colors.blue,
+                  border: Border.all(color: Colors.blue),
+                  borderRadius: BorderRadius.circular(5.0)),
+            ),
+          ));
 
   void editProfile() => SchedulerBinding.instance!.addPostFrameCallback((_) {
         Navigator.push(
