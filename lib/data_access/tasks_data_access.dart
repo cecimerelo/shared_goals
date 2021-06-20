@@ -8,8 +8,9 @@ getTasksReference() {
   return tasks;
 }
 
-Future<QuerySnapshot<Object?>> getAllSteps() async {
-  final QuerySnapshot stepsSnapshot = await tasks.get();
+Future<QuerySnapshot<Object?>> getAllUndoneSteps() async {
+  final QuerySnapshot stepsSnapshot =
+      await tasks.where('done', isEqualTo: false).get();
   return stepsSnapshot;
 }
 

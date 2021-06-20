@@ -19,7 +19,7 @@ class _TimelineState extends State<Timeline> {
   }
 
   Future setStep() async {
-    final QuerySnapshot stepsSnapshot = await getAllSteps();
+    final QuerySnapshot stepsSnapshot = await getAllUndoneSteps();
 
     setState(() {
       steps = stepsSnapshot.docs;

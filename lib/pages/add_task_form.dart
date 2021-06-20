@@ -204,8 +204,9 @@ class _AddTaskFormState extends State<AddTaskForm> {
               iconSize: 20,
               elevation: 16,
               onChanged: (MeasuringUnit? newValue) {
+                IconData newIcon = _getIcon(newValue!);
                 setState(() {
-                  resourceIcon = _getIcon(newValue!);
+                  resourceIcon = newIcon;
                   selectedUnit = newValue;
                 });
               },
