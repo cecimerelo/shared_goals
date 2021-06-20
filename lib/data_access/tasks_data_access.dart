@@ -24,3 +24,13 @@ Future<DocumentReference<Object?>> addStep(Task task) {
     'resourcesReference': task.resourcesReference
   });
 }
+
+Future<int> getNumberOfTasksDone(List<dynamic> tasksReferences) async {
+  int counter = 0;
+  for (DocumentReference taskReference in tasksReferences) {
+    final DocumentSnapshot stream = await taskReference.get();
+    Map? data = stream.data() as Map;
+    counter = data['done'] ? counter + 1 : counter + 0;
+  }
+  return counter;
+}

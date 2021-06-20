@@ -111,19 +111,19 @@ class _UploadState extends State<Upload> {
 
     String parentId = Uuid().v4();
 
-    List<String> tasksReference = await saveTasksInFireStore(parentId);
+    List<DocumentReference> tasksReference = await saveTasksInFireStore(parentId);
     GoalEntity goal = GoalEntity(parentId, deadline, name, tasksReference,
         widget.currentUser.id, widget.currentUser.username, Timestamp.now());
     createGoal(goal);
   }
 
-  Future<List<String>> saveTasksInFireStore(String parentId) async {
-    List<String> tasksReference= [];
+  Future<List<DocumentReference>> saveTasksInFireStore(String parentId) async {
+    List<DocumentReference> tasksReference= [];
     for(var i=0;i<generateTasksWidgets.dynamicListOfTasks.length;i++){
       task_entity.Task task = generateTasksWidgets.dynamicListOfTasks[i];
       task.parentID = parentId;
       await addStep(task).then((value) =>
-          tasksReference.add(value.path));
+          tasksReference.add(value));
     }
     return tasksReference;
     }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -210,12 +211,12 @@ class _AddTaskFormState extends State<AddTaskForm> {
               items: _dropdownMeasuringUnitsItems);
 
   saveTask(BuildContext context) async {
-    List<String> resourcesReference = [];
+    List<DocumentReference> resourcesReference = [];
 
     for (TextEditingController controller in _resource) {
       Resource resource = Resource(selectedUnit.id, controller.text);
       await addResource(resource)
-          .then((value) => resourcesReference.add(value.path));
+          .then((value) => resourcesReference.add(value));
     }
 
     Task newTask = Task(deadline, false, selectedUnit.id, _taskTitle.text,

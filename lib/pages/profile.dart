@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:fluttershare/data_access/goals_data_access.dart';
+import 'package:fluttershare/data_access/tasks_data_access.dart';
 import 'package:fluttershare/data_access/users_data_access.dart';
 import 'package:fluttershare/globals.dart';
 import 'package:fluttershare/models/user.dart';
@@ -24,6 +25,7 @@ class _ProfileState extends State<Profile> {
   final String currentUserId = currentUser.id;
   bool isLoading = false;
   int goalCount = 0;
+  int tasksCount = 0;
   List<GoalWidget> goals = [];
 
   @override
@@ -37,14 +39,18 @@ class _ProfileState extends State<Profile> {
       isLoading = true;
     });
 
-    QuerySnapshot snapshot =
+    QuerySnapshot goalSnapshot =
         await getGoalsOrderedByCreationDate(widget.profileId);
+
+    QuerySnapshot taskSnapshots = await getAllSteps();
 
     setState(() {
       isLoading = false;
-      goalCount = snapshot.docs.length;
+      goalCount = goalSnapshot.docs.length;
+      tasksCount = taskSnapshots.docs.length;
+
       goals =
-          snapshot.docs.map((goal) => GoalWidget.fromDocument(goal)).toList();
+          goalSnapshot.docs.map((goal) => GoalWidget.fromDocument(goal)).toList();
     });
   }
 
@@ -125,8 +131,8 @@ class _ProfileState extends State<Profile> {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            buildProfileValuesColumn('goals', 0),
-            buildProfileValuesColumn('tasks', 0),
+            buildProfileValuesColumn('goals', goalCount),
+            buildProfileValuesColumn('tasks', tasksCount),
             buildProfileValuesColumn('followers', 0)
           ]);
 
