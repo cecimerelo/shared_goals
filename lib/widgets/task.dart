@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttershare/data_access/goals_data_access.dart';
 import 'package:fluttershare/models/task.dart';
 import 'package:fluttershare/pages/visualize_task.dart';
 import 'package:intl/intl.dart';
@@ -20,6 +21,21 @@ class TaskWidget extends StatefulWidget {
 
 class _TaskWidgetState extends State<TaskWidget> {
   final TaskEntity task;
+  String parentName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    getGoalName();
+  }
+
+  getGoalName() async{
+    String goalName = await getGoalNameById(task.parentId);
+
+    setState(() {
+      parentName = goalName;
+    });
+  }
 
   _TaskWidgetState({
     required this.task,
@@ -27,8 +43,6 @@ class _TaskWidgetState extends State<TaskWidget> {
 
   @override
   Widget build(BuildContext context) {
-    String dateFormatted =
-        DateFormat('yyyy-MM-dd – kk:mm').format(task.deadline);
     DateTime today = DateTime.now();
     final int daysUntil = today.difference(task.deadline).inDays;
 
@@ -50,9 +64,20 @@ class _TaskWidgetState extends State<TaskWidget> {
                 },
                 title: GestureDetector(
                   onTap: () => goToTaskVisualizePage(),
-                  child: new Text("${task.name}",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 19)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: new Text('${task.name}',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 19)),
+                      ),
+                      new Text('Goal : $parentName',
+                          style: TextStyle(fontSize: 15)),
+                    ],
+                  ),
                 ),
                 subtitle: Text('Days left: $daysUntil',
                     style: TextStyle(fontSize: 15, color: Colors.red)),

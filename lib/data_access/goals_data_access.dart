@@ -12,6 +12,12 @@ Future<QuerySnapshot<Object?>> getGoalsOrderedByCreationDate(
       .get();
 }
 
+Future<String> getGoalNameById(String goalId) async {
+  DocumentSnapshot goal = await goalsReference.doc(goalId).get();
+  Map? data = goal.data() as Map;
+  return data['name'];
+}
+
 createGoal(GoalEntity goal) {
   goalsReference.doc(goal.id).set({
     'id': goal.id,
