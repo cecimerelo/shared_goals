@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttershare/data_access/goals_data_access.dart';
 import 'package:fluttershare/models/task.dart';
 import 'package:fluttershare/pages/visualize_task.dart';
-import 'package:intl/intl.dart';
 
 class TaskWidget extends StatefulWidget {
   final TaskEntity task;
@@ -29,7 +28,7 @@ class _TaskWidgetState extends State<TaskWidget> {
     getGoalName();
   }
 
-  getGoalName() async{
+  getGoalName() async {
     String goalName = await getGoalNameById(task.parentId);
 
     setState(() {
@@ -44,7 +43,7 @@ class _TaskWidgetState extends State<TaskWidget> {
   @override
   Widget build(BuildContext context) {
     DateTime today = DateTime.now();
-    final int daysUntil = today.difference(task.deadline).inDays;
+    final int daysUntil = - today.difference(task.deadline).inDays;
 
     return Row(children: <Widget>[
       Expanded(
@@ -92,5 +91,6 @@ class _TaskWidgetState extends State<TaskWidget> {
     ]);
   }
 
-  goToTaskVisualizePage() => Navigator.push(
-      context, MaterialPageRoute(builder: (context) => VisualizeTask(task: task)));}
+  goToTaskVisualizePage() => Navigator.push(context,
+      MaterialPageRoute(builder: (context) => VisualizeTask(task: task)));
+}

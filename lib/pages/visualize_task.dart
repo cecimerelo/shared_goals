@@ -39,7 +39,7 @@ class _VisualizeTaskState extends State<VisualizeTask> {
     DateFormat('yyyy-MM-dd – kk:mm').format(widget.task.deadline);
     DateTime today = DateTime.now();
 
-    final int daysUntil = today.difference(widget.task.deadline).inDays;
+    final int daysUntil = - today.difference(widget.task.deadline).inDays;
 
     return Scaffold(
       appBar: header(context, titleText: 'Task: ${widget.task.name}'),

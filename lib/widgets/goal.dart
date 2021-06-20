@@ -37,7 +37,9 @@ class _GoalWidgetState extends State<GoalWidget> {
 
   getPercentageOfTasksDone() async {
     int numberOfTasksDone = await getNumberOfTasksDone(goal.tasksReference);
-    completedTasksPercentage = (numberOfTasksDone / goal.tasksReference.length);
+    setState(() {
+      completedTasksPercentage = (numberOfTasksDone / goal.tasksReference.length);
+    });
   }
 
   @override
