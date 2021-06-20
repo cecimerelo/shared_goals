@@ -8,7 +8,20 @@ class ActivityFeed extends StatefulWidget {
 class _ActivityFeedState extends State<ActivityFeed> {
   @override
   Widget build(BuildContext context) {
-    return Text('Activity Feed');
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(Icons.construction, size:100, color: Colors.grey,),
+          Text(
+            "Under construction",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 30, color: Colors.grey),
+          ),
+        ],
+      ),
+    );
   }
 }
 
