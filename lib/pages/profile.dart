@@ -45,7 +45,7 @@ class _ProfileState extends State<Profile> {
     QuerySnapshot goalSnapshot =
         await getGoalsOrderedByCreationDate(widget.profileId);
     QuerySnapshot taskSnapshots =
-        await getStepsOrderedByCreationDate(widget.profileId);
+        await getUndoneStepsOrderedByDeadline(widget.profileId);
 
     setState(() {
       isLoading = false;
@@ -247,7 +247,6 @@ class _ProfileState extends State<Profile> {
     } else if (goalOrientation == 'goalList') {
       return Column(children: goals);
     } else if (goalOrientation == 'taskList') {
-      // TODO : do the same as above
       return Column(children: tasks);
     }
   }

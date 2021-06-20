@@ -41,6 +41,7 @@ class _TaskWidgetState extends State<TaskWidget> {
                 value: _isChecked,
                 activeColor: Theme.of(context).primaryColor,
                 onChanged: (bool? value) {
+                  // TODO: save state in firebase
                   setState(() {
                     _isChecked = value!;
                   });

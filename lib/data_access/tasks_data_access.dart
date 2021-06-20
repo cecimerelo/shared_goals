@@ -13,9 +13,11 @@ Future<QuerySnapshot<Object?>> getAllSteps() async {
   return stepsSnapshot;
 }
 
-Future<QuerySnapshot<Object?>> getStepsOrderedByCreationDate(String profileId) async {
+Future<QuerySnapshot<Object?>> getUndoneStepsOrderedByDeadline(
+    String profileId) async {
   return tasks
       .where('ownerId', isEqualTo: profileId)
+      .where('done', isEqualTo: false)
       .orderBy('deadline', descending: true)
       .get();
 }
