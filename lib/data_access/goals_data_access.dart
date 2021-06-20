@@ -14,6 +14,7 @@ Future<QuerySnapshot<Object?>> getGoalsOrderedByCreationDate(
 
 createGoal(GoalEntity goal) {
   goalsReference.doc(goal.id).set({
+    'id': goal.id,
     'name': goal.name,
     'deadline': Timestamp.fromDate(goal.deadline),
     'createdOn': goal.createdOn,

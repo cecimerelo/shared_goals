@@ -16,7 +16,7 @@ class GoalEntity {
     DateTime auxDeadline = DateTime.parse(doc['deadline'].toDate().toString());
 
     return GoalEntity(
-        '',
+        doc['id'],
         auxDeadline,
         doc['name'],
         doc['tasksReference'],

@@ -6,12 +6,12 @@ class TaskEntity {
   String measuredIn;
   String name;
   String totalEffort;
-  String parentID;
+  String parentId;
   List<dynamic> resourcesReference;
   String ownerId;
 
   TaskEntity(this.deadline, this.done, this.measuredIn, this.name,
-      this.totalEffort, this.parentID, this.resourcesReference, this.ownerId);
+      this.totalEffort, this.parentId, this.resourcesReference, this.ownerId);
 
   factory TaskEntity.fromDocument(DocumentSnapshot doc) {
     DateTime auxDeadline = DateTime.parse(doc['deadline'].toDate().toString());
@@ -22,7 +22,7 @@ class TaskEntity {
         doc['measuredIn'],
         doc['name'],
         doc['totalEffort'],
-        doc['parentID'],
+        doc['parentId'],
         doc['resourcesReference'],
         doc['ownerId']);
   }

@@ -121,7 +121,7 @@ class _UploadState extends State<Upload> {
     List<DocumentReference> tasksReference= [];
     for(var i=0;i<generateTasksWidgets.dynamicListOfTasks.length;i++){
       task_entity.TaskEntity task = generateTasksWidgets.dynamicListOfTasks[i];
-      task.parentID = parentId;
+      task.parentId = parentId;
       await addStep(task).then((value) =>
           tasksReference.add(value));
     }

@@ -22,6 +22,15 @@ Future<QuerySnapshot<Object?>> getUndoneStepsOrderedByDeadline(
       .get();
 }
 
+Future<QuerySnapshot<Object?>> getGoalStepsOrderedByDeadline(
+    String profileId, goalId) async {
+  return tasks
+      .where('parentId', isEqualTo: goalId)
+      .where('ownerId', isEqualTo: profileId)
+      .orderBy('deadline', descending: true)
+      .get();
+}
+
 Future<DocumentReference<Object?>> addStep(TaskEntity task) {
   return tasks.add({
     'deadline': task.deadline,
@@ -29,7 +38,7 @@ Future<DocumentReference<Object?>> addStep(TaskEntity task) {
     'measuredIn': task.measuredIn,
     'name': task.name,
     'totalEffort': task.totalEffort,
-    'parentID': task.parentID,
+    'parentID': task.parentId,
     'resourcesReference': task.resourcesReference,
     'ownerId': task.ownerId
   });

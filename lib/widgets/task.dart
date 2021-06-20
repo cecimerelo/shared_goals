@@ -19,7 +19,6 @@ class TaskWidget extends StatefulWidget {
 
 class _TaskWidgetState extends State<TaskWidget> {
   final TaskEntity task;
-  late bool _isChecked = false;
 
   _TaskWidgetState({
     required this.task,
@@ -29,6 +28,8 @@ class _TaskWidgetState extends State<TaskWidget> {
   Widget build(BuildContext context) {
     String dateFormatted =
         DateFormat('yyyy-MM-dd – kk:mm').format(task.deadline);
+    DateTime today = DateTime.now();
+    final int daysUntil = today.difference(task.deadline).inDays;
 
     return Row(children: <Widget>[
       Expanded(
@@ -38,20 +39,25 @@ class _TaskWidgetState extends State<TaskWidget> {
             Card(
               child: new CheckboxListTile(
                 controlAffinity: ListTileControlAffinity.leading,
-                value: _isChecked,
+                value: task.done,
                 activeColor: Theme.of(context).primaryColor,
                 onChanged: (bool? value) {
                   // TODO: save state in firebase
                   setState(() {
-                    _isChecked = value!;
+                    task.done = value!;
                   });
                 },
-                title: new Text("${task.name}",
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 19)),
-                subtitle: Text('$dateFormatted'),
+                title: GestureDetector(
+                  onTap: () => {print('tapped')},
+                  child: new Text("${task.name}",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 19)),
+                ),
+                subtitle: Text('Days left: $daysUntil',
+                    style: TextStyle(fontSize: 15, color: Colors.red)),
                 secondary: InkWell(
                     child: new Icon(Icons.edit),
+                    // TODO: define functionality
                     onTap: () => {print('tapped')}),
               ),
             ),

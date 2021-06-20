@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttershare/data_access/tasks_data_access.dart';
 import 'package:fluttershare/models/goal.dart';
+import 'package:fluttershare/pages/visualize_goal.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class GoalWidget extends StatefulWidget {
@@ -43,7 +44,8 @@ class _GoalWidgetState extends State<GoalWidget> {
   Widget build(BuildContext context) {
     return SizedBox(
       child: GestureDetector(
-        onTap: () => print('tapped'),
+        // TODO: define functionality
+        onTap: () => goToGoalVisualizePage(),
         child: new LinearPercentIndicator(
           center: Text('${goal.name}',
               style: TextStyle(
@@ -61,4 +63,7 @@ class _GoalWidgetState extends State<GoalWidget> {
       ),
     );
   }
+
+  goToGoalVisualizePage() => Navigator.push(
+      context, MaterialPageRoute(builder: (context) => VisualizeGoal(goal: goal)));
 }
