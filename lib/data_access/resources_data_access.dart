@@ -4,9 +4,13 @@ import 'package:fluttershare/entities/resource.dart';
 final CollectionReference resourcesReference =
 FirebaseFirestore.instance.collection('resources');
 
-Future<DocumentReference<Object?>> addResource(Resource resource) {
+Future<DocumentReference<Object?>> addResource(ResourceEntity resource) {
   return resourcesReference.add({
     'measuringUnitName': resource.measuringUnitName,
     'resource': resource.resource
   });
+}
+
+Future<QuerySnapshot<Object?>> getTaskResources(String taskName) async {
+  return resourcesReference.where('taskName', isEqualTo: taskName).get();
 }

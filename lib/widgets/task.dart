@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttershare/models/task.dart';
+import 'package:fluttershare/pages/visualize_task.dart';
 import 'package:intl/intl.dart';
 
 class TaskWidget extends StatefulWidget {
@@ -48,7 +49,7 @@ class _TaskWidgetState extends State<TaskWidget> {
                   });
                 },
                 title: GestureDetector(
-                  onTap: () => {print('tapped')},
+                  onTap: () => goToTaskVisualizePage(),
                   child: new Text("${task.name}",
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 19)),
@@ -57,7 +58,6 @@ class _TaskWidgetState extends State<TaskWidget> {
                     style: TextStyle(fontSize: 15, color: Colors.red)),
                 secondary: InkWell(
                     child: new Icon(Icons.edit),
-                    // TODO: define functionality
                     onTap: () => {print('tapped')}),
               ),
             ),
@@ -66,4 +66,6 @@ class _TaskWidgetState extends State<TaskWidget> {
       ),
     ]);
   }
-}
+
+  goToTaskVisualizePage() => Navigator.push(
+      context, MaterialPageRoute(builder: (context) => VisualizeTask(task: task)));}

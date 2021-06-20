@@ -44,7 +44,6 @@ class _GoalWidgetState extends State<GoalWidget> {
   Widget build(BuildContext context) {
     return SizedBox(
       child: GestureDetector(
-        // TODO: define functionality
         onTap: () => goToGoalVisualizePage(),
         child: new LinearPercentIndicator(
           center: Text('${goal.name}',

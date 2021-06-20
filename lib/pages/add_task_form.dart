@@ -215,7 +215,7 @@ class _AddTaskFormState extends State<AddTaskForm> {
     List<DocumentReference> resourcesReference = [];
 
     for (TextEditingController controller in _resource) {
-      Resource resource = Resource(selectedUnit.id, controller.text);
+      ResourceEntity resource = ResourceEntity(selectedUnit.id, controller.text, _taskTitle.text);
       await addResource(resource)
           .then((value) => resourcesReference.add(value));
     }
