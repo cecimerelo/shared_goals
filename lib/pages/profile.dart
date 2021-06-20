@@ -11,6 +11,7 @@ import 'package:fluttershare/pages/edit_profile.dart';
 import 'package:fluttershare/widgets/goal.dart';
 import 'package:fluttershare/widgets/header.dart';
 import 'package:fluttershare/widgets/progress.dart';
+import 'package:fluttershare/widgets/task.dart';
 
 class Profile extends StatefulWidget {
   final String profileId;
@@ -27,6 +28,8 @@ class _ProfileState extends State<Profile> {
   int goalCount = 0;
   int tasksCount = 0;
   List<GoalWidget> goals = [];
+  List<TaskWidget> tasks = [];
+  String goalOrientation = 'goalList';
 
   @override
   void initState() {
@@ -41,16 +44,21 @@ class _ProfileState extends State<Profile> {
 
     QuerySnapshot goalSnapshot =
         await getGoalsOrderedByCreationDate(widget.profileId);
-
-    QuerySnapshot taskSnapshots = await getAllSteps();
+    QuerySnapshot taskSnapshots =
+        await getStepsOrderedByCreationDate(widget.profileId);
 
     setState(() {
       isLoading = false;
       goalCount = goalSnapshot.docs.length;
       tasksCount = taskSnapshots.docs.length;
 
-      goals =
-          goalSnapshot.docs.map((goal) => GoalWidget.fromDocument(goal)).toList();
+      goals = goalSnapshot.docs
+          .map((goal) => GoalWidget.fromDocument(goal))
+          .toList();
+
+      tasks = taskSnapshots.docs
+          .map((goal) => TaskWidget.fromDocument(goal))
+          .toList();
     });
   }
 
@@ -61,6 +69,8 @@ class _ProfileState extends State<Profile> {
         body: ListView(
           children: <Widget>[
             buildProfileHeader(),
+            Divider(),
+            buildGoalTasksMenu(),
             Divider(height: 0.0),
             buildProfileGoals()
           ],
@@ -116,11 +126,6 @@ class _ProfileState extends State<Profile> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  padding: EdgeInsets.only(top: 2.0),
-                  child: Text(user.bio),
-                )
               ],
             ),
           );
@@ -157,6 +162,34 @@ class _ProfileState extends State<Profile> {
     );
   }
 
+  Row buildGoalTasksMenu() => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          IconButton(
+            icon: Icon(Icons.list,
+                color: goalOrientation == "goalList"
+                    ? Theme.of(context).primaryColor
+                    : Colors.grey),
+            onPressed: () => setPostOrientation("goalList"),
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.fact_check,
+              color: goalOrientation == "taskList"
+                  ? Theme.of(context).primaryColor
+                  : Colors.grey,
+            ),
+            onPressed: () => setPostOrientation("taskList"),
+          )
+        ],
+      );
+
+  setPostOrientation(String postOrientation) {
+    setState(() {
+      this.goalOrientation = postOrientation;
+    });
+  }
+
   buildEditProfileButton() {
     // if we are seeing our own profile
     bool isProfileOwner = currentUserId == widget.profileId ? true : false;
@@ -165,7 +198,8 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  Container buildButton({required String text, required VoidCallback function}) {
+  Container buildButton(
+      {required String text, required VoidCallback function}) {
     return Container(
         padding: EdgeInsets.only(top: 2.0),
         child: TextButton(
@@ -186,17 +220,35 @@ class _ProfileState extends State<Profile> {
   }
 
   void editProfile() => SchedulerBinding.instance!.addPostFrameCallback((_) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => EditProfile(currentUserId: currentUserId)));
-    });
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    EditProfile(currentUserId: currentUserId)));
+      });
 
   buildProfileGoals() {
-    if(isLoading) {
+    if (isLoading) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: circularProgress(context),
       );
+    } else if (goals.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(
+          child: Text(
+            'No goals yet...',
+            style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    } else if (goalOrientation == 'goalList') {
+      return Column(children: goals);
+    } else if (goalOrientation == 'taskList') {
+      // TODO : do the same as above
+      return Column(children: tasks);
     }
-    return Column(children: goals);
   }
 }

@@ -5,12 +5,13 @@ import 'package:flutter/services.dart';
 import 'package:fluttershare/data_access/resources_data_access.dart';
 import 'package:fluttershare/entities/measuring_unit_entity.dart';
 import 'package:fluttershare/entities/resource.dart';
-import 'package:fluttershare/entities/task_entity.dart';
+import 'package:fluttershare/models/task.dart';
 
 class AddTaskForm extends StatefulWidget {
-  AddTaskForm({Key? key, required this.onTaskAdded}) : super(key: key);
+  AddTaskForm({Key? key, required this.onTaskAdded, required this.ownerId}) : super(key: key);
 
-  final Function(Task) onTaskAdded;
+  final Function(TaskEntity) onTaskAdded;
+  final String ownerId;
 
   @override
   _AddTaskFormState createState() => _AddTaskFormState();
@@ -219,8 +220,8 @@ class _AddTaskFormState extends State<AddTaskForm> {
           .then((value) => resourcesReference.add(value));
     }
 
-    Task newTask = Task(deadline, false, selectedUnit.id, _taskTitle.text,
-        _totalEffort.text, '', resourcesReference);
+    TaskEntity newTask = TaskEntity(deadline, false, selectedUnit.id, _taskTitle.text,
+        _totalEffort.text, '', resourcesReference, widget.ownerId);
     widget.onTaskAdded(newTask);
     Navigator.of(context).pop();
   }

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fluttershare/entities/task_entity.dart';
+import 'package:fluttershare/models/task.dart';
 
 final CollectionReference tasks =
     FirebaseFirestore.instance.collection('tasks');
@@ -13,7 +13,14 @@ Future<QuerySnapshot<Object?>> getAllSteps() async {
   return stepsSnapshot;
 }
 
-Future<DocumentReference<Object?>> addStep(Task task) {
+Future<QuerySnapshot<Object?>> getStepsOrderedByCreationDate(String profileId) async {
+  return tasks
+      .where('ownerId', isEqualTo: profileId)
+      .orderBy('deadline', descending: true)
+      .get();
+}
+
+Future<DocumentReference<Object?>> addStep(TaskEntity task) {
   return tasks.add({
     'deadline': task.deadline,
     'done': task.done,
@@ -21,7 +28,8 @@ Future<DocumentReference<Object?>> addStep(Task task) {
     'name': task.name,
     'totalEffort': task.totalEffort,
     'parentID': task.parentID,
-    'resourcesReference': task.resourcesReference
+    'resourcesReference': task.resourcesReference,
+    'ownerId': task.ownerId
   });
 }
 

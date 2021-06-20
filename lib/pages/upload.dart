@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttershare/data_access/goals_data_access.dart';
 import 'package:fluttershare/data_access/tasks_data_access.dart';
-import 'package:fluttershare/entities/task_entity.dart' as task_entity;
+import 'package:fluttershare/models/task.dart' as task_entity;
 import 'package:fluttershare/models/goal.dart';
 import 'package:fluttershare/models/user.dart';
 import 'package:fluttershare/widgets/generate_tasks_widgets.dart';
@@ -120,7 +120,7 @@ class _UploadState extends State<Upload> {
   Future<List<DocumentReference>> saveTasksInFireStore(String parentId) async {
     List<DocumentReference> tasksReference= [];
     for(var i=0;i<generateTasksWidgets.dynamicListOfTasks.length;i++){
-      task_entity.Task task = generateTasksWidgets.dynamicListOfTasks[i];
+      task_entity.TaskEntity task = generateTasksWidgets.dynamicListOfTasks[i];
       task.parentID = parentId;
       await addStep(task).then((value) =>
           tasksReference.add(value));

@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttershare/entities/task_entity.dart';
+import 'package:fluttershare/globals.dart';
+import 'package:fluttershare/models/task.dart';
 import 'package:fluttershare/pages/add_task_form.dart';
 
 class GenerateTasksWidgets extends StatefulWidget {
   GenerateTasksWidgets({Key? key}) : super(key: key);
 
-  late List<Task> dynamicListOfTasks = [];
+  late List<TaskEntity> dynamicListOfTasks = [];
 
   @override
   _GenerateTasksWidgetsState createState() => _GenerateTasksWidgetsState();
@@ -14,6 +15,7 @@ class GenerateTasksWidgets extends StatefulWidget {
 
 class _GenerateTasksWidgetsState extends State<GenerateTasksWidgets> {
   Icon floatingIcon = new Icon(Icons.add);
+  final String currentUserId = currentUser.id;
 
   @override
   Widget build(BuildContext context) {
@@ -67,11 +69,12 @@ class _GenerateTasksWidgetsState extends State<GenerateTasksWidgets> {
   Route<Object?> _addTaskForm() {
     return CupertinoPageRoute(
         builder: (_) => AddTaskForm(
-            onTaskAdded: (Task newTask) =>
+          ownerId: currentUserId,
+            onTaskAdded: (TaskEntity newTask) =>
                 setState(() => widget.dynamicListOfTasks.add(newTask))));
   }
 
-  void _deleteTask(Task taskToDelete) {
+  void _deleteTask(TaskEntity taskToDelete) {
     setState(() {
       widget.dynamicListOfTasks
           .removeWhere((task) => task.name == taskToDelete.name);
