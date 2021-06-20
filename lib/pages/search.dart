@@ -68,8 +68,12 @@ class _SearchState extends State<Search> {
   }
 
   handleSearch(String query) {
-    Future<QuerySnapshot> usersSearched =
-        getUsersWhereFieldIsEqualTo('username', query);
+    Future<QuerySnapshot> usersSearched;
+    if(query.length != 0) {
+      usersSearched = getUsersWhereFieldIsEqualTo('username', query);
+    } else{
+      usersSearched = getUsersWhereFieldIsEqualTo('username', 'razzmatazz');
+    }
 
     setState(() {
       searchResultsFuture = usersSearched;
@@ -89,6 +93,19 @@ class _SearchState extends State<Search> {
             UserResult searchResult = UserResult(user);
             searchResults.add(searchResult);
           });
+
+          if (searchResults.isEmpty) {
+            return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: Text(
+                    'No users found ...',
+                    style: TextStyle(
+                        color: Colors.grey, fontStyle: FontStyle.italic),
+                    textAlign: TextAlign.center,
+                  ),
+                ));
+          }
           return ListView(
             children: searchResults,
           );
