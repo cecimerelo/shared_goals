@@ -120,18 +120,20 @@ class _AddTaskFormState extends State<AddTaskForm> {
     );
   }
 
-  ListView _resourceFormRow(int itemCount) => ListView.builder(
+  ListView _resourceFormRow(int itemCount) {
+    TextEditingController resourceController = TextEditingController();
+    _resource.add(resourceController);
+
+    return ListView.builder(
       shrinkWrap: true,
       itemCount: itemCount,
       itemBuilder: (_, index) {
-        TextEditingController resourceController = TextEditingController();
-        _resource.add(resourceController);
-
         return new CupertinoTextFormFieldRow(
             autocorrect: true,
             prefix: Icon(resourceIcon),
             controller: resourceController);
       });
+  }
 
   Row measuredInRow() => Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
